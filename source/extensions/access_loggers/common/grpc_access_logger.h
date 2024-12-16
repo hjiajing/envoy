@@ -229,12 +229,15 @@ public:
 
   typename GrpcAccessLogger::SharedPtr
   getOrCreateLogger(const ConfigProto& config, GrpcAccessLoggerType logger_type) override {
-    // TODO(euroelessar): Consider cleaning up loggers.
-    auto& cache = tls_slot_->getTyped<ThreadLocalCache>();
-    const auto cache_key = std::make_pair(MessageUtil::hash(config), logger_type);
-    const auto it = cache.access_loggers_.find(cache_key);
-    if (it != cache.access_loggers_.end()) {
-      return it->second;
+      printf("\033[0;33m[DEBUG] "
+             "GrpcAccessLoggerCache::getOrCreateLogger.\033[0m\n");
+      // TODO(euroelessar): Consider cleaning up loggers.
+      auto &cache = tls_slot_->getTyped<ThreadLocalCache>();
+      const auto cache_key =
+          std::make_pair(MessageUtil::hash(config), logger_type);
+      const auto it = cache.access_loggers_.find(cache_key);
+      if (it != cache.access_loggers_.end()) {
+          return it->second;
     }
 
     const auto logger = createLogger(config, cache.dispatcher_);

@@ -330,15 +330,18 @@ bool MetadataFilter::evaluate(const Formatter::HttpFormatterContext&,
 
 InstanceSharedPtr AccessLogFactory::fromProto(const envoy::config::accesslog::v3::AccessLog& config,
                                               Server::Configuration::FactoryContext& context) {
-  FilterPtr filter;
-  if (config.has_filter()) {
-    filter = FilterFactory::fromProto(config.filter(), context);
+    printf("\033[0;33m[DEBUG] AccessLogFactory::fromProto.\033[0m\n");
+    printf("config is %s\n", config.DebugString().c_str());
+    FilterPtr filter;
+    if (config.has_filter()) {
+        filter = FilterFactory::fromProto(config.filter(), context);
   }
 
   auto& factory = Config::Utility::getAndCheckFactory<AccessLog::AccessLogInstanceFactory>(config);
   ProtobufTypes::MessagePtr message = Config::Utility::translateToFactoryConfig(
       config, context.messageValidationVisitor(), factory);
 
+  printf("\033[0;33m[DEBUG] AccessLogFactory::fromProto.\033[0m\n");
   return factory.createAccessLogInstance(*message, std::move(filter), context);
 }
 

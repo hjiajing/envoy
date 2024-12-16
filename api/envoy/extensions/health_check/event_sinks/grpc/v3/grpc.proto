@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package envoy.extensions.health_check.event_sinks.grpc.v3;
+
+import "envoy/config/core/v3/base.proto";
+import "envoy/config/core/v3/grpc_service.proto";
+import "envoy/config/core/v3/config_source.proto";
+import "udpa/annotations/status.proto";
+import "validate/validate.proto";
+
+option java_package = "io.envoyproxy.envoy.extensions.health_check.event_sinks.grpc.v3";
+option java_outer_classname = "GrpcProto";
+option java_multiple_files = true;
+option go_package = "github.com/envoyproxy/go-control-plane/envoy/extensions/health_check/event_sinks/grpc/v3;grpcv3";
+option (udpa.annotations.file_status).package_version_status = ACTIVE;
+
+// [#protodoc-title: Health Check Log File Sink]
+// [#extension: envoy.health_check.event_sinks.file]
+
+// Health check event file sink.
+// The health check event will be converted to JSON.
+message HealthCheckEventGrpcSink {
+  // Specifies the path to the health check event log.
+  string test = 1 [(validate.rules).string = {min_len: 1}];
+  HealthCheckGrpcConfig config = 2 [(validate.rules).message = {required: true}];
+}
+
+message HealthCheckGrpcConfig {
+  string log_name = 1 [(validate.rules).string = {min_len: 1}];
+  envoy.config.core.v3.GrpcService grpc_service = 2 [(validate.rules).message = {required: true}];
+}

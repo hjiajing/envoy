@@ -632,9 +632,11 @@ HttpConnectionManagerConfig::HttpConnectionManagerConfig(
   }
 
   for (const auto& access_log : config.access_log()) {
-    AccessLog::InstanceSharedPtr current_access_log =
-        AccessLog::AccessLogFactory::fromProto(access_log, context_);
-    access_logs_.push_back(current_access_log);
+      printf("\033[0;33m[DEBUG] HttpConnectionManager -> "
+             "AccessLogFactory::fromProto.\033[0m\n");
+      AccessLog::InstanceSharedPtr current_access_log =
+          AccessLog::AccessLogFactory::fromProto(access_log, context_);
+      access_logs_.push_back(current_access_log);
   }
 
   if (config.has_access_log_options()) {

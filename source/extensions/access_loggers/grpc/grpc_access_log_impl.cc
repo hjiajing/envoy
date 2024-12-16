@@ -17,18 +17,25 @@ namespace AccessLoggers {
 namespace GrpcCommon {
 
 GrpcAccessLoggerImpl::GrpcAccessLoggerImpl(
-    const Grpc::RawAsyncClientSharedPtr& client,
-    const envoy::extensions::access_loggers::grpc::v3::CommonGrpcAccessLogConfig& config,
-    Event::Dispatcher& dispatcher, const LocalInfo::LocalInfo& local_info, Stats::Scope& scope)
-    : GrpcAccessLogger(config, dispatcher, scope, GRPC_LOG_STATS_PREFIX,
-                       std::make_unique<Common::StreamingGrpcAccessLogClient<
-                           envoy::service::accesslog::v3::StreamAccessLogsMessage,
-                           envoy::service::accesslog::v3::StreamAccessLogsResponse>>(
-                           client,
-                           *Protobuf::DescriptorPool::generated_pool()->FindMethodByName(
-                               "envoy.service.accesslog.v3.AccessLogService.StreamAccessLogs"),
-                           GrpcCommon::optionalRetryPolicy(config))),
-      log_name_(config.log_name()), local_info_(local_info) {}
+    const Grpc::RawAsyncClientSharedPtr &client,
+    const envoy::extensions::access_loggers::grpc::v3::CommonGrpcAccessLogConfig
+        &config,
+    Event::Dispatcher &dispatcher, const LocalInfo::LocalInfo &local_info,
+    Stats::Scope &scope)
+    : GrpcAccessLogger(
+          config, dispatcher, scope, GRPC_LOG_STATS_PREFIX,
+          std::make_unique<Common::StreamingGrpcAccessLogClient<
+              envoy::service::accesslog::v3::StreamAccessLogsMessage,
+              envoy::service::accesslog::v3::StreamAccessLogsResponse>>(
+              client,
+              *Protobuf::DescriptorPool::generated_pool()->FindMethodByName(
+                  "envoy.service.accesslog.v3.AccessLogService."
+                  "StreamAccessLogs"),
+              GrpcCommon::optionalRetryPolicy(config))),
+      log_name_(config.log_name()), local_info_(local_info) {
+    printf("\033[0;33m[DEBUG] "
+           "GrpcAccessLoggerImpl::GrpcAccessLoggerImpl.\033[0m\n");
+}
 
 void GrpcAccessLoggerImpl::addEntry(envoy::data::accesslog::v3::HTTPAccessLogEntry&& entry) {
   message_.mutable_http_logs()->mutable_log_entry()->Add(std::move(entry));
@@ -61,6 +68,8 @@ GrpcAccessLoggerImpl::SharedPtr GrpcAccessLoggerCacheImpl::createLogger(
   // exceptions in worker threads. Call sites of this getOrCreateLogger must check the cluster
   // availability via ClusterManager::checkActiveStaticCluster beforehand, and throw exceptions in
   // the main thread if necessary.
+  printf(
+      "\033[0;33m[DEBUG] GrpcAccessLoggerCacheImple->createLogger.\033[0m\n");
   auto factory_or_error =
       async_client_manager_.factoryForGrpcService(config.grpc_service(), scope_, true);
   THROW_IF_NOT_OK_REF(factory_or_error.status());

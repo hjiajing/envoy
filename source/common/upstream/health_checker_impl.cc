@@ -85,6 +85,8 @@ HealthCheckerFactory::create(const envoy::config::core::v3::HealthCheck& health_
   if (!health_check_config.event_log_path().empty() /* deprecated */ ||
       !health_check_config.event_logger().empty()) {
     HealthCheckEventLoggerPtr event_logger;
+    printf("\033[0;32m[DEBUG] eventl logger is not empty::create.\033[0m\n");
+    printf("event_logger is %s\n", health_check_config.DebugString().c_str());
     event_logger = std::make_unique<HealthCheckEventLoggerImpl>(health_check_config, *context);
     context->setEventLogger(std::move(event_logger));
   }

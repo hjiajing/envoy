@@ -72,6 +72,7 @@ EXTENSIONS = {
     #
 
     "envoy.health_check.event_sinks.file":              "//source/extensions/health_check/event_sinks/file:file_sink_lib",
+    "envoy.health_check.event_sinks.grpc":              "//source/extensions/health_check/event_sinks/grpc:grpc_sink_lib",
 
     #
     # Input Matchers

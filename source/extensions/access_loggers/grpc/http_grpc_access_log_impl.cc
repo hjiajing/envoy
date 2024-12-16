@@ -31,8 +31,9 @@ HttpGrpcAccessLog::HttpGrpcAccessLog(AccessLog::FilterPtr&& filter,
     : Common::ImplBase(std::move(filter)),
       config_(std::make_shared<const HttpGrpcAccessLogConfig>(std::move(config))),
       tls_slot_(tls.allocateSlot()), access_logger_cache_(std::move(access_logger_cache)) {
-  for (const auto& header : config_->additional_request_headers_to_log()) {
-    request_headers_to_log_.emplace_back(header);
+    printf("\033[0;33m[DEBUG] HttpGrpcAccessLog::HttpGrpcAccessLog.\033[0m\n");
+    for (const auto &header : config_->additional_request_headers_to_log()) {
+        request_headers_to_log_.emplace_back(header);
   }
 
   for (const auto& header : config_->additional_response_headers_to_log()) {
